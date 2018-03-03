@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html [
+    <!ENTITY bull "&#8226;">
+    <!ENTITY nbsp "&#160;">
+]>
+<html 
+xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:h="http://java.sun.com/jsf/html"
+ xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:libcomp="http://java.sun.com/jsf/composite/comp"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/WEB-INF/template/template.xhtml">
+
+	<ui:define name="content">
+		<ui:param name="ctrl" value="#{personController}" />
+
+		<p:outputPanel id="panelMessages">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" />
+		</p:outputPanel>
+
+		<p:dataTable id="dtPerson" var="person" value="#{ctrl.entityList}"   
+				rows="10"
+				paginator="true"
+				paginatorPosition="bottom"
+				rowsPerPageTemplate="10, 20, 30, 40, 50"
+				emptyMessage="No record Found">
+			<p:column headerText="Id">
+				<h:outputText value="#{person.id}" />
+			</p:column>
+
+			<p:column headerText="Name">
+				<h:outputText value="#{person.name}" />
+			</p:column>
+
+			<p:column headerText="Email">
+				<h:outputText value="#{person.email}" />
+			</p:column>
+
+			<p:column headerText=" ">
+				<p:commandButton icon="ui-icon-pencil" process="@this" title="Edit" actionListener="#{ctrl.view(person)}" update=":form:dialogPerson :form:name form:email" oncomplete="PF('dialogPerson').show();" immediate="true" />
+				<p:commandButton icon="ui-icon-document" process="@this" title="View" actionListener="#{ctrl.viewOnly(person)}" update=":form:dialogPerson :form:name form:email" oncomplete="PF('dialogPerson').show();" immediate="true" />
+				<p:commandButton icon="ui-icon-trash" process="@this" title="Delete" actionListener="#{ctrl.view(person)}" update=":form:deleteDialog" oncomplete="PF('deleteDialog').show()" immediate="true" />
+			</p:column>
+
+		</p:dataTable>
+		<div style="text-align: right; padding-top: 10px;">
+			<p:commandButton icon="ui-icon-search" process="@this" title="View Names" actionListener="#{ctrl.names}" update=":form:dialogNames" oncomplete="PF('dialogNames').show();" immediate="true" />
+			&nbsp;&nbsp;
+			<p:commandButton icon="ui-icon-plus" process="@this" title="Add" actionListener="#{ctrl.add}" update=":form:dialogPerson :form:name form:email" oncomplete="PF('dialogPerson').show();" immediate="true" />
+			&nbsp;&nbsp;
+		</div>
+
+		<p:dialog id="dialogPerson" widgetVar="dialogPerson" modal="true" header="#{ctrl.entity.id == null?'Add':(ctrl.viewOnly?'View':'Edit')}" width="310" height="120" draggable="true" resizable="false" closeOnEscape="true" closable="true">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Name" />
+				<p:inputText id="name" value="#{ctrl.entity.name}" disabled="#{ctrl.viewOnly}" />
+				<h:outputLabel value="Email" />
+				<p:inputText id="email" value="#{ctrl.entity.email}" disabled="#{ctrl.viewOnly}" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="2">
+				<p:commandButton value="Save" icon="ui-icon-check" actionListener="#{ctrl.save}" update="panelMessages dtPerson" rendered="#{ctrl.entity.id == null and !ctrl.viewOnly}" onsuccess="PF('dialogPerson').hide();" />
+				<p:commandButton value="Update" icon="ui-icon-check" actionListener="#{ctrl.update}" update="panelMessages dtPerson" rendered="#{ctrl.entity.id != null and !ctrl.viewOnly}" onsuccess="PF('dialogPerson').hide();" />
+				<p:commandButton value="Cancel" type="button" icon="ui-icon-arrowreturnthick-1-w" onclick="PF('dialogPerson').hide();" />
+			</h:panelGrid>
+		</p:dialog>
+
+		<p:dialog id="dialogNames" widgetVar="dialogNames" modal="true" header="Names" width="310" height="500" draggable="true" resizable="false" closeOnEscape="true" closable="true">
+			<p:dataList value="#{ctrl.nameList}" var="name" type="ordered">
+		        <f:facet name="header">Names</f:facet>
+		        #{name}
+		    </p:dataList>
+		</p:dialog>
+
+		<p:confirmDialog id="deleteDialog" message="Confirm delet of person #{ctrl.entity.name} ?" header="Delete Pesson" widgetVar="deleteDialog">
+			<p:commandButton process="@this" update=":form:dtPerson panelMessages" value="Yes" actionListener="#{ctrl.delete}" oncomplete="PF('deleteDialog').hide()" />
+			<p:commandButton process="@this" value="No" onclick="PF('deleteDialog').hide()" />
+		</p:confirmDialog>
+
+		<br/>
+		<h:link value="Home" outcome="index" />
+
+	</ui:define>
+</ui:composition>
+</html>

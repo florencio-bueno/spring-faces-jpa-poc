@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html [
+    <!ENTITY bull "&#8226;">
+    <!ENTITY nbsp "&#160;">
+]>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<f:view contentType="text/html">
+<h:head>
+	<title>${project.name}</title>
+	<meta charset="UTF-8"/>
+	<link rel="shortcut icon" type="image/png" href="#{request.contextPath}/resources/images/favicon.ico" />
+	<h:outputStylesheet library="style" name="style.css" />
+	<h:outputScript library="script" name="script.js" />
+	<style>
+		<ui:insert name="css" />
+	</style>
+	<script>
+		<ui:insert name="js" />
+	</script>
+</h:head>
+<h:body>
+	<h:form id="formBlank">
+		<h:inputHidden id="p1" />
+		<h:inputHidden id="p2" />
+		<h:inputHidden id="p3" />
+	</h:form>
+
+
+	<div id="container" class="noBox">
+		<div id="header" class="noBox">
+			<ui:include src="header.xhtml" />
+		</div>
+		<div id="content" class="noBox">
+			<h:form id="form" prependId="true">
+				<ui:insert name="content" />
+			</h:form>
+		</div>
+		<div id="footer" class="noBox">
+			
+			<p:ajaxStatus onstart="PF('loadingDialog').show();"
+				onsuccess="PF('loadingDialog').hide();" />
+
+			<p:dialog modal="true" styleClass="centralizado" 
+				widgetVar="loadingDialog" header="Aguarde..." draggable="false"
+				resizable="false" closable="false">
+				<h:graphicImage library="images" name="loading1.gif" />
+			</p:dialog>
+			
+			<ui:include src="footer.xhtml" />
+		</div>
+	</div>
+
+</h:body>
+</f:view>
+</html>

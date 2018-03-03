@@ -1,0 +1,21 @@
+
+.loading-small{
+	background-image: url(#{facesContext.externalContext.requestContextPath}/resources/images/loading1.gif) !important;
+}
+
+.loading-bar{
+	background-image: url(#{facesContext.externalContext.requestContextPath}/resources/images/loading2.gif) !important;
+}
+
+
+
+
+.noBox {
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+}
+
+.noBreak {
+	white-space:nowrap;
+}
